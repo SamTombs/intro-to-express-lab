@@ -61,13 +61,25 @@ app.get("/collectibles/:index", (req, res) => {
       { name: "Fifty-Inch Heels", price: 175, type: "heel" }
   ];
 
-app.get("/shoes/:index", (req, res) => {
-    const shoe = req.params.index;
-    const minPrice = shoes.filter((price) => {
-        if (shoes.price > 50) {
-            req.send(shoe);
-    } else {
-        return ;
-    }
-    })
+// Route to filter shoes
+app.get('/shoes', (req, res) => {
+    // had to find a way to req.query all of the questions
+  const { 'min-price': minPrice, 'max-price': maxPrice, type } = req.query;
+
+  // had to make a ammendable variable
+  let footware = shoes;
+  // filter functions 
+  if (minPrice) {
+    footware = footware.filter(shoe => shoe.price >= parseInt(minPrice));
+  }
+
+  if (maxPrice) {
+    footware = footware.filter(shoe => shoe.price <= parseInt(maxPrice));
+  }
+
+  if (type) {
+    footware = footware.filter(shoe => shoe.type === type);
+  }
+  //shows the result in browser
+  res.send(footware);
 });
